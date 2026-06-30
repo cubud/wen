@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ƿen sandbox</title>
+  <link rel="stylesheet" href="./src/wen-core.css">
+  <link rel="stylesheet" href="./src/wen-component.css">
+  <link rel="stylesheet" href="./src/wen-yaml.css">
+  <link rel="stylesheet" href="./src/wen-mermaid.css">
+  <link rel="stylesheet" href="./src/wen-chart.css">
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 800px; margin: 2rem auto; color: #333; background: #f0f2f5; }
+    #output-panel { background: #1e1e1e; color: #d4d4d4; padding: 1rem; border-radius: 8px; white-space: pre-wrap; font-family: monospace; display: none; margin-top: 1rem; }
+    .controls { margin: 1rem 0; display: flex; gap: 1rem; }
+    button.export-btn { padding: 0.5rem 1rem; background: #000; color: #fff; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+    button.export-btn:hover { background: #333; }
+  </style>
+</head>
+<body>
+
+  <h1>ƿen editor</h1>
+  <p>Sponsored by Cubud. A native ESM Markdown editor that makes YAML usable for humans.</p>
+
+  <div class="controls">
+    <button id="btn-export" class="export-btn">Export to Markdown</button>
+  </div>
+
+  <div id="editor-container"></div>
+  
+  <pre id="output-panel"></pre>
+
+  <script type="module">
+    import { WenEditor } from './src/wen-core.js';
+    import { WenYamlView } from './src/wen-yaml.js';
+    import { WenComponentView } from './src/wen-component.js';
+    import { WenMermaidView } from './src/wen-mermaid.js';
+    import { WenChartView } from './src/wen-chart.js';
+    const editor = new WenEditor({
+      element: document.getElementById('editor-container'),
+      blockViews: {
+        'yaml': WenYamlView,
+        'mermaid': WenMermaidView,
+        'component': WenComponentView,
+        'chart': WenChartView
+      },
+      initialMarkdown: "```yaml\ntitle: Hello World\nauthor:\n  name: Jane Editor\n  role: Writer\n```\n\n# Welcome to ƿen\n\nUse the toolbar above, or just type Markdown natively. Try adding a new key to the YAML form!"
+    });
+    
+    // Setup Drag & Drop File Loading
+        const dropZone = document.body;
+        
+        dropZone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          document.body.style.opacity = '0.7'; // Quick visual feedback
+        });
+
+        dropZone.addEventListener('dragleave', (e) => {
+          e.preventDefault();
+          document.body.style.opacity = '1';
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          document.body.style.opacity = '1';
+          
+          if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            const file = e.dataTransfer.files[0];
+            
+            // Accept .md, .txt, or generic text files
+            if (file.name.endsWith('.md') || file.name.endsWith('.txt') || file.type.startsWith('text/')) {
+              const reader = new FileReader();
+              reader.onload = (event) => {
+                editor.loadContent(event.target.result);
+              };
+              reader.readAsText(file);
+            } else {
+              alert("Please drop a valid Markdown or Text file.");
+            }
+          }
+        });
+
+    document.getElementById('btn-export').addEventListener('click', () => {
+      const md = editor.exportMarkdown();
+      const panel = document.getElementById('output-panel');
+      panel.textContent = md;
+      panel.style.display = 'block';
+    });
+  </script>
+</body>
+</html>

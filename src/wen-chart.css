@@ -1,0 +1,33 @@
+.wen-chart-block *, .wen-chart-block *::before, .wen-chart-block *::after {
+  box-sizing: border-box;
+}
+
+.wen-chart-block {
+  border: 2px solid #8250df;
+  border-radius: var(--wen-radius);
+  margin: 1.5rem 0;
+  background: var(--wen-bg);
+  box-sizing: border-box;
+}
+
+.wen-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #8250df;
+  padding: 0.5rem 1rem;
+  background: #8250df;
+  color: white;
+  border-top-left-radius: calc(var(--wen-radius) - 2px);
+  border-top-right-radius: calc(var(--wen-radius) - 2px);
+}
+
+.wen-chart-title { font-size: 0.85rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
+.wen-chart-toggle-btn { background: var(--wen-bg); border: none; color: var(--wen-text-main); cursor: pointer; font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: var(--wen-radius-sm); font-weight: 600; transition: background 0.15s; }
+.wen-chart-toggle-btn:hover { background: var(--wen-surface-hover); }
+
+.wen-chart-view-visual, .wen-chart-view-raw { display: none !important; padding: 1rem; }
+.wen-chart-view-visual.active, .wen-chart-view-raw.active { display: block !important; }
+
+.wen-chart-raw-input { width: 100%; min-height: 200px; border: 1px solid var(--wen-border); border-radius: var(--wen-radius-sm); padding: 0.75rem; font-family: var(--wen-font-mono); font-size: 0.9rem; background: #1e1e1e; color: #d4d4d4; resize: vertical; outline: none; white-space: pre; }
+.wen-chart-error { color: var(--wen-danger); font-family: var(--wen-font-mono); font-size: 0.85rem; background: #fef2f2; padding: 1rem; border-radius: var(--wen-radius-sm); border-left: 4px solid var(--wen-danger); }

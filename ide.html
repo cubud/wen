@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <title>ƿen + monaco FTW</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    <script src="https://unpkg.com/monaco-editor@latest/min/vs/loader.js"></script>
+    
+    <link rel="stylesheet" href="./src/wen-core.css">
+    <link rel="stylesheet" href="./src/wen-yaml.css">
+    <link rel="stylesheet" href="./src/wen-component.css">
+    <link rel="stylesheet" href="./src/wen-mermaid.css">
+    <link rel="stylesheet" href="./src/wen-chart.css">
+    
+    <script>
+    // --- Monaco Environment Setup ---
+    require.config({ paths: { 'vs': 'https://unpkg.com/monaco-editor@latest/min/vs' }});
+    window.MonacoEnvironment = { getWorkerUrl: () => proxy };
+
+    let proxy = URL.createObjectURL(new Blob([`
+      self.MonacoEnvironment = {
+        baseUrl: 'https://unpkg.com/monaco-editor@latest/min/'
+      };
+      importScripts('https://unpkg.com/monaco-editor@latest/min/vs/base/worker/workerMain.js');
+    `], { type: 'text/javascript' }));
+
+    // --- Vanilla JS UI Helpers ---
+    const nowOpts = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+    const now = () => new Date().toLocaleString('en-GB', nowOpts);
+    
+    const getColor = (col) => {
+      if (col === 1) return '#FF3333'; 
+      if (col === 2) return '#00C500';
+      return '#F5F5F5';
+    };
+    
+    const msg = (txt, col = 0) => {
+      const msgEl = document.getElementById('msgs');
+      msgEl.style.color = getColor(col);
+      msgEl.textContent = `${now()} - ${txt}`;
+    };
+
+    // --- State & Layout Engine ---
+    let currentMode = 'split'; // 'source', 'split', or 'visual'
+
+    const updateLayout = () => {
+      const navHeight = document.getElementById('nav').offsetHeight;
+      const hContainer = window.innerHeight - navHeight;
+      const monacoContainer = document.getElementById('monaco-container');
+      const wenContainer = document.getElementById('wen-container');
+      
+      monacoContainer.style.height = `${hContainer}px`;
+      monacoContainer.style.top = `${navHeight}px`;
+      wenContainer.style.height = `${hContainer}px`;
+      wenContainer.style.top = `${navHeight}px`;
+
+      if (currentMode === 'source') {
+        monacoContainer.style.width = '100%';
+        monacoContainer.style.left = '0';
+        wenContainer.style.width = '0%';
+        wenContainer.style.left = '100%';
+      } else if (currentMode === 'visual') {
+        monacoContainer.style.width = '0%';
+        monacoContainer.style.left = '0';
+        wenContainer.style.width = '100%';
+        wenContainer.style.left = '0';
+      } else { // split
+        monacoContainer.style.width = '50%';
+        monacoContainer.style.left = '0';
+        wenContainer.style.width = '50%';
+        wenContainer.style.left = '50%';
+      }
+
+      // Explicitly tell Monaco to redraw its canvas to fit the new dimensions
+      if (window.monacoEditor) {
+        window.monacoEditor.layout();
+      }
+    };
+
+    // --- Bootstrapping ---
+    document.addEventListener('DOMContentLoaded', () => {
+      updateLayout();
+      window.addEventListener('resize', updateLayout);
+
+      // Wire up the View Mode Switcher
+      document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active-mode'));
+          e.target.classList.add('active-mode');
+          currentMode = e.target.id.replace('btn-', '');
+          updateLayout();
+        });
+      });
+
+      require(["vs/editor/editor.main"], async function () {
+        
+        // 1. Dynamically import Wen Editor modules (straight from source — no build step needed)
+        const [{ WenEditor }, { WenYamlView }, { WenComponentView }, { WenMermaidView }, { WenChartView }] = await Promise.all([
+          import('./src/wen-core.js'),
+          import('./src/wen-yaml.js'),
+          import('./src/wen-component.js'),
+          import('./src/wen-mermaid.js'),
+          import('./src/wen-chart.js')
+        ]);
+
+        const inputInitial = document.getElementById('initial');
+        const inputSource = document.getElementById('source');
+        const inputEdited = document.getElementById('edited');
+        const btnSave = document.getElementById('save');
+        const btnRevert = document.getElementById('revert');
+
+        // 2. Initialize Monaco Editor
+        window.monacoEditor = monaco.editor.create(document.getElementById('monaco-container'), {
+          value: inputInitial.value,
+          language: 'markdown',
+          theme: 'vs-dark',
+          wordWrap: 'on',
+          automaticLayout: true,
+          minimap: { enabled: false }
+        }); 
+
+        // 3. Initialize Wen Editor
+        window.wenEditor = new WenEditor({
+          element: document.getElementById('wen-container'),
+          blockViews: {
+            'yaml': WenYamlView,
+            'component': WenComponentView,
+            'mermaid': WenMermaidView,
+            'chart': WenChartView
+          },
+          initialMarkdown: inputInitial.value
+        });
+
+        // Setup Drag & Drop File Loading
+        const dropZone = document.body;
+        
+        dropZone.addEventListener('dragover', (e) => {
+          e.preventDefault();
+          document.body.style.opacity = '0.7'; // Quick visual feedback
+        });
+
+        dropZone.addEventListener('dragleave', (e) => {
+          e.preventDefault();
+          document.body.style.opacity = '1';
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+          e.preventDefault();
+          document.body.style.opacity = '1';
+          
+          if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+            const file = e.dataTransfer.files[0];
+            
+            if (file.name.endsWith('.md') || file.name.endsWith('.txt') || file.type.startsWith('text/')) {
+              const reader = new FileReader();
+              reader.onload = (event) => {
+                const newContent = event.target.result;
+
+                // Update Monaco; the sync engine below propagates the change into the WYSIWYG.
+                if (window.monacoEditor) {
+                  window.monacoEditor.setValue(newContent);
+                }
+              };
+              reader.readAsText(file);
+            } else {
+              alert("Please drop a valid Markdown or Text file.");
+            }
+          }
+        });
+        // 4. THE SYNC LOCK ENGINE
+        let isSyncing = false;
+
+        const updateSaveState = () => {
+          const currentContent = window.monacoEditor.getValue();
+          inputEdited.value = currentContent;
+          btnSave.disabled = (inputSource.value === currentContent);
+          btnRevert.disabled = (inputInitial.value === currentContent);
+        };
+
+        // Event: When Monaco changes -> Update Wen
+        window.monacoEditor.getModel().onDidChangeContent((event) => {
+          if (isSyncing) return;
+          isSyncing = true;
+          
+          try {
+            const rawMd = window.monacoEditor.getValue();
+            // Pass it through our translation bridge first!
+            const processedMd = window.wenEditor.importMarkdown(rawMd);
+            window.wenEditor.editor.commands.setContent(processedMd);
+            
+            updateSaveState();
+            msg('Wen Editor synchronized');
+          } catch(e) {
+            msg('Sync error', 1);
+          } finally {
+            isSyncing = false;
+          }
+        });
+
+        // Event: When Wen changes -> Update Monaco
+        window.wenEditor.editor.on('update', () => {
+          if (isSyncing) return;
+          isSyncing = true;
+          
+          try {
+            const md = window.wenEditor.exportMarkdown();
+            const currentMonaco = window.monacoEditor.getValue();
+            
+            if (md !== currentMonaco) {
+              window.monacoEditor.setValue(md);
+            }
+            updateSaveState();
+            msg('Monaco synchronized');
+          } catch(e) {
+            msg('Sync error', 1);
+          } finally {
+            isSyncing = false;
+          }
+        });
+
+        // Setup Document Buttons
+        btnSave.addEventListener('click', (e) => {
+          e.target.disabled = true;
+          inputSource.value = inputEdited.value;
+          msg('saved', 2);
+        });
+
+        btnRevert.addEventListener('click', (e) => {
+          if(confirm('Reverting will reset the editor and preview to its initial content. Proceed?')) {
+            window.monacoEditor.setValue(inputInitial.value);
+            e.target.disabled = true;
+            msg('editor reverted', 2);
+          }
+        });
+
+        msg('Editors loaded and synced', 2);
+      });
+    });
+    </script>
+    
+    <style type="text/css">
+    html, body { margin: 0; padding: 0; overflow: hidden; background: #1e1e1e; font-family: system-ui, sans-serif; }
+    
+    #monaco-container, #wen-container {
+      position: absolute;
+      overflow: hidden;
+      /* We omit CSS transitions here so Monaco can explicitly recalculate its canvas bounds instantly */
+    }
+    
+    #monaco-container { border-right: 1px solid #333; }
+    #wen-container { background: #fff; }
+    
+    #nav {
+      position: absolute;
+      left: 0; top: 0; width: 100%; height: 54px;
+      background-color: #2f3245;
+      display: flex; align-items: center; gap: 15px; padding: 0 15px;
+      color: #fff; z-index: 10; box-sizing: border-box;
+    }
+
+    /* Mode Switcher CSS */
+    .mode-switcher {
+      display: flex;
+      background: #1e1e1e;
+      border-radius: 6px;
+      padding: 3px;
+      margin-left: 20px;
+    }
+
+    .mode-btn {
+      background: transparent;
+      color: #aaa;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      transition: all 0.1s ease;
+    }
+
+    .mode-btn:hover { color: #fff; }
+    .mode-btn.active-mode { background: #4a4d65; color: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+    
+    /* Standard Nav Buttons */
+    .action-btn { border: none; border-radius: 4px; padding: 8px 15px; cursor: pointer; font-weight: bold; }
+    #save { background-color: #00CC00; color: white; }
+    #save:disabled { background-color: #005500; color: #aaa; }
+    #revert { background-color: orange; color: black; }
+    #revert:disabled { background-color: #735532; color: #ccc; }
+    
+    /* Wen Editor Overrides to fit split-screen like an IDE */
+    .wen-editor-wrapper { 
+      border: none !important; 
+      border-radius: 0 !important; 
+      box-shadow: none !important; 
+      height: 100%; 
+    }
+    
+    .wen-editor-wrapper > div:last-child {
+      flex: 1;           /* Fill remaining space below toolbar */
+      overflow-y: auto;  /* Turn on the scrollbar here! */
+      min-height: 0;     /* Prevent infinite stretching */
+    }
+    
+    .wen-editor-root { 
+      height: auto; 
+      outline: none;     /* Keeps it clean when clicked */
+    }
+    </style>
+  </head>
+  <body class="no-js">
+    <nav id="nav">
+      <span style="font-weight: bold; font-size: 1.2rem;">ƿen</span> 
+      
+      <div class="mode-switcher">
+        <button id="btn-source" class="mode-btn">Code</button>
+        <button id="btn-split" class="mode-btn active-mode">Split</button>
+        <button id="btn-visual" class="mode-btn">Visual</button>
+      </div>
+
+      <div style="flex-grow: 1;"></div>
+
+      <button id="save" class="action-btn" disabled>Save changes</button>
+      <label style="font-size: 0.9rem;"><input type="checkbox" id="autosave" /> Auto-save</label>
+      <button id="revert" class="action-btn" disabled>Revert changes</button>
+      <p id="msgs" style="text-align: right; margin: 0 0 0 15px; font-family: monospace; font-size: 0.85rem; color: #f5f5f5; width: 220px;"></p>
+    </nav>
+    
+    <div id="monaco-container"></div>
+    <div id="wen-container"></div>
+    
+    <textarea style="display:none" id="initial">
+---
+title: "About us"
+pageType: "CONTENT_PAGE"
+
+---
+
+# Meet the team
+
+We make sure we do things in a way that everyone can understand - not just developers or designers or content specialists.
+
+<Section title="What makes us different?" backgroundColor="strawberryYogurt">
+  ## This is inner markdown
+  It is much easier to edit here than inside the raw code!
+  <SubSection title="The Holy Grail">
+  This is **the best** we can do at the moment
+  </SubSection>
+</Section>
+
+A chart might be nice...
+
+```chart
+title: Claims by Age
+type: bar
+---
+Age, Medical, Cancellation
+18-25, 450, 120
+26-40, 1200, 300
+41-60, 850, 450
+```
+
+And everyone loves a mermaid...
+
+```mermaid
+stateDiagram-v2
+  [*] --> idle
+  idle --> pending : connect
+  idle --> destroyed : destroy/close
+  
+  pending --> idle : timeout
+  pending --> destroyed : destroy
+
+  state close_fork <<fork>>
+  pending --> close_fork : close
+  close_fork --> processing
+  close_fork --> destroyed
+
+  pending --> processing : process
+
+  processing --> pending : keepalive
+  processing --> destroyed : done
+  processing --> destroyed : destroy
+
+  destroyed --> [*]
+
+  state processing {
+      [*] --> running
+      running --> closing : close
+      running --> busy : needDrain
+      busy --> running : drainComplete
+      running --> [*] : keepalive
+      closing --> [*] : done
+  }
+```
+
+</textarea>
+<textarea style="display:none" id="source"></textarea>
+<textarea style="display:none" id="edited"></textarea>
+</body>
+</html>

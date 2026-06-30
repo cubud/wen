@@ -1,0 +1,351 @@
+/* GitHub Dark syntax-highlighting theme (highlight.js 11.9.0), vendored and
+   scoped to the editor so it never leaks into a consumer's global stylesheet.
+   Source: github.com/highlightjs/highlight.js — MIT, theme by @Hirse. */
+.wen-editor-root pre code.hljs { display: block; overflow-x: auto; padding: 1em; }
+.wen-editor-root code.hljs { padding: 3px 5px; }
+.wen-editor-root .hljs { color: #c9d1d9; background: #0d1117; }
+.wen-editor-root .hljs-doctag,
+.wen-editor-root .hljs-keyword,
+.wen-editor-root .hljs-meta .hljs-keyword,
+.wen-editor-root .hljs-template-tag,
+.wen-editor-root .hljs-template-variable,
+.wen-editor-root .hljs-type,
+.wen-editor-root .hljs-variable.language_ { color: #ff7b72; }
+.wen-editor-root .hljs-title,
+.wen-editor-root .hljs-title.class_,
+.wen-editor-root .hljs-title.class_.inherited__,
+.wen-editor-root .hljs-title.function_ { color: #d2a8ff; }
+.wen-editor-root .hljs-attr,
+.wen-editor-root .hljs-attribute,
+.wen-editor-root .hljs-literal,
+.wen-editor-root .hljs-meta,
+.wen-editor-root .hljs-number,
+.wen-editor-root .hljs-operator,
+.wen-editor-root .hljs-selector-attr,
+.wen-editor-root .hljs-selector-class,
+.wen-editor-root .hljs-selector-id,
+.wen-editor-root .hljs-variable { color: #79c0ff; }
+.wen-editor-root .hljs-meta .hljs-string,
+.wen-editor-root .hljs-regexp,
+.wen-editor-root .hljs-string { color: #a5d6ff; }
+.wen-editor-root .hljs-built_in,
+.wen-editor-root .hljs-symbol { color: #ffa657; }
+.wen-editor-root .hljs-code,
+.wen-editor-root .hljs-comment,
+.wen-editor-root .hljs-formula { color: #8b949e; }
+.wen-editor-root .hljs-name,
+.wen-editor-root .hljs-quote,
+.wen-editor-root .hljs-selector-pseudo,
+.wen-editor-root .hljs-selector-tag { color: #7ee787; }
+.wen-editor-root .hljs-subst { color: #c9d1d9; }
+.wen-editor-root .hljs-section { color: #1f6feb; font-weight: 700; }
+.wen-editor-root .hljs-bullet { color: #f2cc60; }
+.wen-editor-root .hljs-emphasis { color: #c9d1d9; font-style: italic; }
+.wen-editor-root .hljs-strong { color: #c9d1d9; font-weight: 700; }
+.wen-editor-root .hljs-addition { color: #aff5b4; background-color: #033a16; }
+.wen-editor-root .hljs-deletion { color: #ffdcd7; background-color: #67060c; }
+
+:root {
+  --wen-bg: #ffffff;
+  --wen-surface: #f9fafb;          
+  --wen-surface-hover: #f3f4f6;    
+  --wen-border: #e5e7eb;           
+  --wen-text-main: #1f2937;        
+  --wen-text-muted: #6b7280;       
+  --wen-accent: #0f172a;           
+  --wen-accent-text: #ffffff;      
+  --wen-danger: #ef4444;           
+  --wen-font-sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --wen-font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --wen-radius: 8px;
+  --wen-radius-sm: 4px;
+  --wen-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+
+.wen-editor-wrapper {
+  background: var(--wen-bg);
+  border: 1px solid var(--wen-border);
+  border-radius: var(--wen-radius);
+  box-shadow: var(--wen-shadow);
+  display: flex;
+  flex-direction: column;
+  font-family: var(--wen-font-sans);
+  color: var(--wen-text-main);
+}
+
+.wen-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: var(--wen-surface);
+  border-bottom: 1px solid var(--wen-border);
+  align-items: center;
+  border-top-left-radius: calc(var(--wen-radius) - 1px);
+  border-top-right-radius: calc(var(--wen-radius) - 1px);
+}
+
+.wen-toolbar-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 0.35rem 0.6rem;
+  cursor: pointer;
+  font-family: var(--wen-font-sans);
+  font-size: 0.85rem;
+  color: var(--wen-text-muted);
+  border-radius: var(--wen-radius-sm);
+  transition: all 0.15s ease;
+}
+
+.wen-toolbar-btn:hover { background: var(--wen-surface-hover); color: var(--wen-text-main); }
+.wen-toolbar-btn.is-active { background: var(--wen-accent); color: var(--wen-accent-text); }
+.wen-toolbar-divider { width: 1px; height: 1.25rem; background: var(--wen-border); margin: 0 0.25rem; }
+
+.wen-editor-root { padding: 1.5rem; min-height: 300px; outline: none; line-height: 1.6; }
+.wen-editor-root p, .wen-editor-root h1, .wen-editor-root h2, .wen-editor-root h3 { margin-top: 0; margin-bottom: 1rem; }
+.wen-editor-root h1, .wen-editor-root h2 { font-weight: 600; color: var(--wen-text-main); }
+/* Inline code (e.g. `const x = 1`) */
+.wen-editor-root p code { 
+  background: var(--wen-surface); 
+  color: var(--wen-text-main); 
+  padding: 0.2em 0.4em; 
+  border-radius: var(--wen-radius-sm); 
+  font-family: var(--wen-font-mono); 
+  font-size: 0.9em; 
+  border: 1px solid var(--wen-border); 
+}
+
+/* Block code (Syntax Highlighted) */
+.wen-editor-root pre {
+  background: #0d1117; /* GitHub Dark background */
+  color: #c9d1d9;      /* GitHub Dark text */
+  padding: 1rem;
+  border-radius: var(--wen-radius);
+  font-family: var(--wen-font-mono);
+  font-size: 0.9rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.wen-editor-root pre code {
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  border: none;
+  font-size: inherit;
+}
+.wen-editor-root blockquote { border-left: 3px solid var(--wen-border); margin-left: 0; padding-left: 1rem; font-style: italic; color: var(--wen-text-muted); }
+
+/* Utility Modals (Link/Image) must always sit absolute top */
+.wen-modal-overlay {
+  position: fixed; 
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6); 
+  z-index: 99999 !important; /* Wins the z-index battle */
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+}
+
+.wen-modal {
+  background: var(--wen-bg);
+  padding: 1.5rem;
+  border-radius: var(--wen-radius);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  width: 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 1px solid var(--wen-border);
+  color: var(--wen-text-main);
+  font-family: var(--wen-font-sans);
+}
+
+.wen-modal strong {
+  font-size: 1.1rem;
+}
+
+.wen-modal input {
+  padding: 0.5rem;
+  border-radius: var(--wen-radius-sm);
+  border: 1px solid var(--wen-border);
+  background: var(--wen-surface);
+  color: var(--wen-text-main);
+  font-family: var(--wen-font-mono);
+  outline: none;
+}
+
+.wen-modal input:focus {
+  border-color: #3b82f6;
+}
+
+.wen-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.wen-modal-cancel, .wen-modal-submit {
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--wen-radius-sm);
+  cursor: pointer;
+  border: none;
+  font-weight: 600;
+}
+
+.wen-modal-cancel {
+  background: transparent;
+  color: var(--wen-text-muted);
+}
+
+.wen-modal-cancel:hover {
+  background: var(--wen-surface);
+  color: var(--wen-text-main);
+}
+
+.wen-modal-submit {
+  background: #3b82f6;
+  color: white;
+}
+
+.wen-modal-submit:hover {
+  background: #2563eb;
+}
+
+/* Disabled Toolbar Buttons */
+.wen-toolbar-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: transparent !important;
+  color: var(--wen-text-muted) !important;
+}
+
+/* Table Architecture */
+.wen-editor-root .tableWrapper {
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  border: 1px solid var(--wen-border);
+  border-radius: var(--wen-radius-sm);
+}
+
+/* Bulletproof: Target ALL tables inside the editor */
+.wen-editor-root table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+.wen-editor-root table td,
+.wen-editor-root table th {
+  min-width: 1em;
+  border: 1px solid #cbd5e1; /* Darker, crisp slate border */
+  padding: 0.5rem;
+  vertical-align: top;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.wen-editor-root table th {
+  font-weight: 600;
+  text-align: left;
+  background-color: var(--wen-surface);
+  color: var(--wen-text-main);
+}
+
+.wen-editor-root table p {
+  margin: 0;
+}
+
+/* Task Lists (Checklists) */
+.wen-editor-root ul[data-type="taskList"] {
+  list-style: none;
+  padding: 0;
+}
+
+.wen-editor-root ul[data-type="taskList"] li {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 0.5rem;
+}
+
+.wen-editor-root ul[data-type="taskList"] li > label {
+  margin-right: 0.5rem;
+  user-select: none;
+  margin-top: 0.15rem; /* Optical alignment with text */
+}
+
+.wen-editor-root ul[data-type="taskList"] li > label input[type="checkbox"] {
+  cursor: pointer;
+}
+
+.wen-editor-root ul[data-type="taskList"] li > div {
+  flex: 1;
+}
+
+.wen-editor-root ul[data-type="taskList"] li p {
+  margin: 0;
+}
+
+/* GitHub Flavored Alerts (Admonitions) */
+.wen-editor-root .wen-github-alert {
+  border-left: 4px solid var(--wen-border);
+  padding: 0.75rem 1rem;
+  margin: 1.5rem 0;
+  border-radius: 0 var(--wen-radius-sm) var(--wen-radius-sm) 0;
+  font-style: normal; /* Overrides standard blockquote italic */
+  color: var(--wen-text-main);
+}
+
+.wen-editor-root .wen-github-alert p:last-child {
+  margin-bottom: 0;
+}
+
+/* Background Tints & Border Colors */
+.wen-editor-root .wen-github-alert-note { border-left-color: #0969da; background-color: rgba(9, 105, 218, 0.05); }
+.wen-editor-root .wen-github-alert-tip { border-left-color: #1a7f37; background-color: rgba(26, 127, 55, 0.05); }
+.wen-editor-root .wen-github-alert-important { border-left-color: #8250df; background-color: rgba(130, 80, 223, 0.05); }
+.wen-editor-root .wen-github-alert-warning { border-left-color: #bf8700; background-color: rgba(191, 135, 0, 0.05); }
+.wen-editor-root .wen-github-alert-caution { border-left-color: #cf222e; background-color: rgba(207, 34, 46, 0.05); }
+
+/* The [!TAG] Badge styling */
+.wen-editor-root .wen-github-alert-badge {
+  display: inline-block;
+  font-weight: 600;
+  font-size: 0.9em;
+  font-family: var(--wen-font-mono);
+}
+
+.wen-editor-root .wen-github-alert-badge-note { color: #0969da; }
+.wen-editor-root .wen-github-alert-badge-tip { color: #1a7f37; }
+.wen-editor-root .wen-github-alert-badge-important { color: #8250df; }
+.wen-editor-root .wen-github-alert-badge-warning { color: #bf8700; }
+.wen-editor-root .wen-github-alert-badge-caution { color: #cf222e; }
+
+/* Rich Recursive Modal */
+.wen-rich-modal-overlay {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7); z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.wen-rich-modal {
+  width: 90vw; height: 90vh; background: #fff;
+  border-radius: var(--wen-radius); display: flex; flex-direction: column;
+  overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+}
+
+.wen-rich-modal-header {
+  padding: 1rem 1.5rem; background: #1e1e1e; color: white;
+  display: flex; justify-content: space-between; align-items: center;
+}
+
+.wen-rich-modal-body {
+  flex: 1; min-height: 0; display: flex; flex-direction: column;
+  background: var(--wen-bg);
+}
+
+.wen-rich-modal-body .wen-editor-wrapper {
+  height: 100%; border: none;
+}

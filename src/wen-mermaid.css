@@ -1,0 +1,50 @@
+.wen-mermaid-block {
+  border: 2px solid #0d9488;
+  border-radius: var(--wen-radius);
+  margin: 1.5rem 0;
+  background: var(--wen-bg);
+  box-sizing: border-box;
+}
+
+.wen-mermaid-block *, .wen-mermaid-block *::before, .wen-mermaid-block *::after {
+  box-sizing: border-box;
+}
+
+.wen-mermaid-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid #0d9488;
+  padding: 0.5rem 1rem;
+  background: #0d9488;
+  color: white;
+  border-top-left-radius: calc(var(--wen-radius) - 2px);
+  border-top-right-radius: calc(var(--wen-radius) - 2px);
+}
+
+.wen-mermaid-title { font-size: 0.85rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
+.wen-mermaid-toggle-btn { background: var(--wen-bg); border: none; color: var(--wen-text-main); cursor: pointer; font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: var(--wen-radius-sm); font-weight: 600; transition: background 0.15s; }
+.wen-mermaid-toggle-btn:hover { background: var(--wen-surface-hover); }
+
+/* THE FIX: Hard-lock the display states so they cannot both show at once */
+.wen-mermaid-view-visual, .wen-mermaid-view-raw { 
+  display: none !important; 
+  padding: 1rem; 
+}
+.wen-mermaid-view-visual.active, .wen-mermaid-view-raw.active { 
+  display: block !important; 
+}
+
+/* Ensure the SVG scales nicely and forces dark text */
+.wen-mermaid-view-visual { 
+  text-align: center; 
+  overflow-x: auto; 
+  background: var(--wen-surface); 
+  border-bottom-left-radius: var(--wen-radius); 
+  border-bottom-right-radius: var(--wen-radius);
+  color: #1f2937 !important; 
+}
+.wen-mermaid-view-visual svg { max-width: 100%; height: auto !important; color: #1f2937; }
+
+.wen-mermaid-raw-input { width: 100%; min-height: 250px; border: 1px solid var(--wen-border); border-radius: var(--wen-radius-sm); padding: 0.75rem; font-family: var(--wen-font-mono); font-size: 0.9rem; background: #1e1e1e; color: #d4d4d4; resize: vertical; outline: none; }
+.wen-mermaid-error { color: var(--wen-danger); font-family: var(--wen-font-mono); font-size: 0.85rem; text-align: left; background: #fef2f2; padding: 1rem; border-radius: var(--wen-radius-sm); border-left: 4px solid var(--wen-danger); white-space: pre-wrap; }

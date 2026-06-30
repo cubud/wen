@@ -1,0 +1,49 @@
+{
+  "name": "@cubud/wen",
+  "version": "1.0.0",
+  "description": "ƿen (wen) — an ESM-native, zero-build WYSIWYG Markdown/YAML editor built on TipTap, with a \"Dumb Router\" architecture for YAML, components, Mermaid and charts.",
+  "type": "module",
+  "license": "MIT",
+  "homepage": "https://github.com/cubud/wen#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cubud/wen.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cubud/wen/issues"
+  },
+  "keywords": [
+    "markdown",
+    "yaml",
+    "wysiwyg",
+    "editor",
+    "tiptap",
+    "prosemirror",
+    "mermaid",
+    "esm",
+    "zero-build"
+  ],
+  "files": [
+    "src",
+    "dist",
+    "README.md",
+    "LICENSE",
+    "LLM_CONTRIBUTING.md"
+  ],
+  "main": "./dist/wen-full.js",
+  "module": "./dist/wen-full.js",
+  "exports": {
+    ".": "./dist/wen-full.js",
+    "./min": "./dist/wen-full.min.js",
+    "./css": "./dist/wen-full.css",
+    "./css/min": "./dist/wen-full.min.css",
+    "./src/*": "./src/*"
+  },
+  "scripts": {
+    "build": "bash build.sh",
+    "prepublishOnly": "npm run build"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

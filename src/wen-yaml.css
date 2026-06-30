@@ -1,0 +1,104 @@
+/* Prevent width + padding horizontal blowouts */
+.wen-yaml-block *, .wen-yaml-block *::before, .wen-yaml-block *::after {
+  box-sizing: border-box;
+}
+
+.wen-yaml-block { border: 1px solid var(--wen-border); border-radius: var(--wen-radius); margin: 1.5rem 0; background: var(--wen-bg); }
+.wen-yaml-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--wen-border); padding: 0.5rem 1rem; background: var(--wen-surface); border-top-left-radius: calc(var(--wen-radius) - 1px); border-top-right-radius: calc(var(--wen-radius) - 1px); }
+.wen-yaml-title { font-size: 0.85rem; font-weight: 600; color: var(--wen-text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.wen-yaml-toggle-btn { background: var(--wen-bg); border: 1px solid var(--wen-border); color: var(--wen-text-muted); cursor: pointer; font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: var(--wen-radius-sm); }
+.wen-yaml-toggle-btn:hover { background: var(--wen-surface-hover); color: var(--wen-text-main); }
+
+/* Collapsible Container Logic */
+.wen-yaml-visual-container { position: relative; display: block; }
+.wen-yaml-view-visual { padding: 0.5rem !important; }
+.wen-yaml-view-raw, .wen-yaml-error-state { display: none; padding: 1rem; }
+.wen-yaml-view-raw.active, .wen-yaml-error-state.active { display: block; }
+.wen-yaml-visual-container.is-collapsed .wen-yaml-view-visual { max-height: 220px; overflow: hidden; }
+.wen-yaml-fade { display: none; }
+.wen-yaml-visual-container.is-collapsed .wen-yaml-fade { display: block; position: absolute; bottom: 33px; left: 0; right: 0; height: 60px; background: linear-gradient(transparent, var(--wen-bg)); pointer-events: none; z-index: 5; }
+.wen-yaml-expand-btn { display: none; width: 100%; background: var(--wen-surface); border: none; border-top: 1px solid var(--wen-border); padding: 0.5rem; color: var(--wen-text-muted); cursor: pointer; font-size: 0.8rem; text-align: center; font-weight: 600; transition: background 0.15s; border-bottom-left-radius: calc(var(--wen-radius) - 1px); border-bottom-right-radius: calc(var(--wen-radius) - 1px); }
+.wen-yaml-expand-btn:hover { color: var(--wen-text-main); background: var(--wen-border); }
+.wen-yaml-visual-container.needs-collapse .wen-yaml-expand-btn { display: block; }
+
+.wen-yaml-raw-input { width: 100%; min-height: 150px; border: 1px solid var(--wen-border); border-radius: var(--wen-radius-sm); padding: 0.75rem; font-family: var(--wen-font-mono); font-size: 0.9rem; color: var(--wen-text-main); background: var(--wen-surface); resize: vertical; outline: none; }
+.wen-yaml-error-state { color: var(--wen-danger); background: #fef2f2; border-top: 1px solid #fecaca; font-size: 0.9rem; }
+
+/* Hierarchical Vertical Layout */
+.wen-type-object, .wen-type-array { display: flex; flex-direction: column; width: 100%; background: rgba(0, 0, 0, 0.02); border-radius: var(--wen-radius-sm); padding: 0.5rem; border: 1px solid rgba(0,0,0,0.05); }
+.wen-row, .wen-array-item { display: flex; flex-direction: column; margin-bottom: 0.5rem; transition: background 0.15s ease; border-radius: var(--wen-radius-sm); }
+.wen-row-top { display: flex; align-items: flex-start; width: 100%; padding: 0.2rem; }
+.wen-row:hover > .wen-row-top, .wen-array-item:hover > .wen-row-top { background: var(--wen-surface); border-radius: var(--wen-radius-sm); }
+
+/* Precise Typography Alignment */
+.wen-key-wrap { 
+  display: flex; 
+  align-items: baseline; /* Aligns the input text and colon perfectly on the bottom edge */
+  width: 140px; 
+  flex-shrink: 0; 
+  padding: 0; /* Strip any old wrap padding */
+}
+
+/* Force identical box models for inputs and textareas */
+.wen-key, .wen-val { 
+  padding: 0; 
+  margin: 0;
+  font-size: 0.9rem; 
+  font-family: var(--wen-font-sans);
+  line-height: 1.5;
+  border: none; 
+  background: transparent; 
+  outline: none; 
+}
+
+.wen-key { 
+  width: 100%; 
+  font-weight: 600; 
+  color: var(--wen-text-muted); 
+}
+
+.wen-val { 
+  flex-grow: 1; 
+  color: var(--wen-text-main); 
+  resize: none; 
+}
+
+.wen-colon { 
+  margin: 0 0.5rem 0 0; 
+  padding: 0;
+  color: var(--wen-text-muted); 
+  font-weight: bold; 
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Italic Placeholders */
+.wen-key::placeholder, 
+.wen-val::placeholder {
+  font-style: italic;
+  opacity: 0.6;
+  font-weight: normal;
+}
+
+.wen-key:focus { color: var(--wen-text-main); }
+
+/* Primitives sit on the same line, complex drops below */
+.wen-val-wrap { flex-grow: 1; min-width: 0; display: flex; align-items: flex-start; }
+.wen-complex-wrap { padding-left: 1rem; width: 100%; margin-top: 0.25rem; }
+.wen-type-primitive { display: flex; align-items: flex-start; gap: 0.5rem; width: 100%; }
+
+/* The Action Buttons */
+.wen-type-controls { display: flex; gap: 0.25rem; opacity: 0; transition: opacity 0.2s; }
+.wen-row:hover .wen-type-controls, .wen-array-item:hover .wen-type-controls { opacity: 1; }
+.wen-type-controls button { background: var(--wen-bg); border: 1px solid var(--wen-border); border-radius: var(--wen-radius-sm); cursor: pointer; padding: 0.2rem 0.4rem; font-size: 0.8rem; color: var(--wen-text-muted); }
+.wen-type-controls button:hover { background: var(--wen-surface-hover); color: var(--wen-text-main); }
+
+.wen-bullet { color: var(--wen-text-muted); font-weight: bold; padding-top: 0.2rem; width: 24px; text-align: center; }
+
+/* Refined Add/Delete UI */
+.wen-btn-delete { background: transparent; border: none; color: var(--wen-text-muted); font-size: 1.25rem; cursor: pointer; opacity: 0; padding: 0 0.5rem; margin-left: auto; }
+.wen-row:hover > .wen-row-top > .wen-btn-delete, .wen-array-item:hover > .wen-row-top > .wen-btn-delete { opacity: 1; }
+.wen-btn-delete:hover { color: var(--wen-danger); }
+
+.wen-btn-add { background: transparent; border: 1px dashed var(--wen-border); color: var(--wen-text-muted); cursor: pointer; text-align: left; font-weight: 500; padding: 0.4rem 0.75rem; font-family: var(--wen-font-sans); transition: all 0.15s ease; border-radius: var(--wen-radius-sm); font-size: 0.85rem; margin-top: 0.25rem; width: 100%; }
+.wen-btn-add:hover { color: var(--wen-text-main); background: var(--wen-surface); border-color: #cbd5e1; }

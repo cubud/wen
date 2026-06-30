@@ -1,0 +1,27 @@
+name: Publish to npm
+
+# Publishes @cubud/wen whenever a version tag (e.g. v1.0.0) is pushed.
+# Uses npm Trusted Publishing (OIDC) — no NPM_TOKEN secret required.
+# One-time setup: after the first manual publish, add this workflow as a
+# Trusted Publisher on npmjs.com (package → Settings → Trusted Publisher).
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write   # required for OIDC Trusted Publishing + provenance
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24   # ships npm >= 11.5.1, required for Trusted Publishing
+          registry-url: https://registry.npmjs.org
+      - name: Build bundle
+        run: npm run build
+      - name: Publish
+        run: npm publish   # auth via OIDC; provenance is automatic

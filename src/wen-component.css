@@ -1,0 +1,120 @@
+.wen-component-block *, .wen-component-block *::before, .wen-component-block *::after {
+  box-sizing: border-box;
+}
+
+.wen-component-block {
+  border: 2px solid var(--wen-accent);
+  border-radius: var(--wen-radius);
+  margin: 1.5rem 0;
+  background: var(--wen-bg);
+}
+
+.wen-component-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 2px solid var(--wen-accent);
+  padding: 0.5rem 1rem;
+  background: var(--wen-accent);
+  color: var(--wen-accent-text);
+  border-top-left-radius: calc(var(--wen-radius) - 2px);
+  border-top-right-radius: calc(var(--wen-radius) - 2px);
+}
+
+.wen-component-title { font-size: 0.85rem; font-weight: bold; text-transform: uppercase; letter-spacing: 0.05em; }
+.wen-component-toggle-btn { background: var(--wen-bg); border: none; color: var(--wen-text-main); cursor: pointer; font-size: 0.75rem; padding: 0.25rem 0.6rem; border-radius: var(--wen-radius-sm); font-weight: 600; }
+
+.wen-component-view-visual, .wen-component-view-raw { display: none; padding: 1rem; }
+.wen-component-view-visual.active, .wen-component-view-raw.active { display: block; }
+
+.wen-component-raw-input { width: 100%; min-height: 200px; border: 1px solid var(--wen-border); border-radius: var(--wen-radius-sm); padding: 0.75rem; font-family: var(--wen-font-mono); font-size: 0.9rem; background: #1e1e1e; color: #d4d4d4; resize: vertical; outline: none; }
+
+.wen-wireframe { border: 1px dashed var(--wen-border); border-radius: var(--wen-radius-sm); background: var(--wen-surface); padding: 1rem; }
+.wen-wireframe-header { color: var(--wen-text-main); font-size: 1.1rem; margin-bottom: 0.75rem; font-family: var(--wen-font-mono); }
+.wen-prop-val { color: var(--wen-accent); }
+.wen-component-error { color: var(--wen-danger); font-weight: bold; }
+
+.wen-wireframe-props {
+  padding: 0.5rem; background: var(--wen-surface);
+  border-bottom: 1px solid var(--wen-border);
+  display: flex; flex-wrap: wrap; gap: 0.5rem;
+}
+
+.wen-wireframe-prop {
+  background: var(--wen-bg); border: 1px solid var(--wen-border);
+  padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem;
+  font-family: var(--wen-font-mono); display: flex; align-items: center; gap: 0.25rem;
+}
+
+.wen-prop-key { color: #8b5cf6; font-weight: bold; }
+
+/* The Editable Attribute Input */
+.wen-prop-val-input {
+  background: transparent; border: none; border-bottom: 1px dashed #cbd5e1;
+  color: #10b981; font-family: inherit; font-size: inherit; outline: none;
+  min-width: 60px; padding: 0 0.2rem; transition: border-color 0.2s;
+}
+.wen-prop-val-input:focus { border-bottom-color: #10b981; }
+
+.wen-wireframe-content { padding: 1rem; }
+
+/* Live Markdown Preview Box */
+.wen-wireframe-preview-box {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: var(--wen-radius-sm);
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  max-height: 250px;
+  overflow-y: auto;
+  box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.wen-wireframe-preview {
+  font-size: 0.9rem;
+  color: #334155;
+  font-family: var(--wen-font-sans);
+  line-height: 1.5;
+}
+
+/* Reset typography inside the preview so headers don't blow out */
+.wen-wireframe-preview h1,
+.wen-wireframe-preview h2,
+.wen-wireframe-preview h3,
+.wen-wireframe-preview h4 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.wen-wireframe-preview h1 { font-size: 1.4em; }
+.wen-wireframe-preview h2 { font-size: 1.2em; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.2rem; }
+.wen-wireframe-preview h3 { font-size: 1.1em; }
+.wen-wireframe-preview p { margin-top: 0; margin-bottom: 0.75rem; }
+.wen-wireframe-preview p:last-child { margin-bottom: 0; }
+.wen-wireframe-preview blockquote { border-left: 3px solid #cbd5e1; margin: 0; padding-left: 1rem; color: #64748b; }
+
+/* The WYSIWYG Trigger Button */
+.wen-wireframe-edit-btn {
+  background: #3b82f6; color: white; border: none; border-radius: var(--wen-radius-sm);
+  padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: bold; cursor: pointer;
+  transition: background 0.15s; width: 100%; text-align: left;
+}
+.wen-wireframe-edit-btn:hover { background: #2563eb; }
+
+/* The Custom Tag & Markdown Preview Styles */
+.wen-preview-tag {
+  font-family: var(--wen-font-mono);
+  color: #8b5cf6;
+  font-weight: bold;
+  font-size: 0.8rem;
+  background: rgba(139, 92, 246, 0.1);
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  margin: 0.25rem 0;
+}
+
+.wen-preview-md p:first-child { margin-top: 0; }
+.wen-preview-md p:last-child { margin-bottom: 0; }
