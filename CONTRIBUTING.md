@@ -57,8 +57,16 @@ npm run build   # runs build.sh: stitches + minifies CSS/JS via npx
 
 ## Releases
 
-Releases are automated: pushing a `v*` tag triggers the GitHub Actions workflow,
-which builds and publishes `@cubud/wen` to npm via OIDC Trusted Publishing.
+Releases are automated via OIDC Trusted Publishing — no npm token required. To cut a
+release, bump the version and push the tag:
+
+```bash
+npm version patch && git push --tags   # use minor / major as appropriate
+```
+
+`npm version` bumps `package.json` and creates a matching `v*` git tag; pushing the tag
+triggers `.github/workflows/publish.yml`, which builds and publishes `@cubud/wen` to npm
+with provenance.
 
 ## License
 
